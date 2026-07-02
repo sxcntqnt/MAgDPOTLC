@@ -6,10 +6,10 @@ import networkx as nx
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import json
-import torch.nn as nn
-import torch
+import tinygrad.nn as nn
+import tinygrad
 import random
-import torch.multiprocessing as mp
+import threading
 from models.timer_rule_set import TimerRuleSet
 from models.cycle_rule_set import CycleRuleSet
 
@@ -26,26 +26,21 @@ def ensure_shared_grads(model, shared_model):
 
 # Acknowledge: Alexis Jacq (https://github.com/alexis-jacq)
 class Counter:
-    """enable the chief to access worker's total number of updates"""
-
     def __init__(self):
-        self.val = mp.Value("i", 0)
-        self.lock = mp.Lock()
+        self.val = 0
+        self.lock = threading.Lock()
 
     def get(self):
-        # used by chief
         with self.lock:
-            return self.val.value
+            return self.val
 
     def increment(self, amt=1):
-        # used by workers
         with self.lock:
-            self.val.value += amt
+            self.val += amt
 
     def reset(self):
-        # used by chief
         with self.lock:
-            self.val.value = 0
+            self.val = 0
 
 
 # Works for both single contants and lists for grid
