@@ -7,7 +7,7 @@ All RL logic (state construction, reward shaping, action execution) lives here.
 import numpy as np
 from collections import OrderedDict
 from environments.environment import Environment
-from abstreet_client import ABStreetClient
+from environments.abstreet_client import ABStreetClient
 
 PER_AGENT_STATE_SIZE = 6
 GLOBAL_STATE_SIZE = 1
@@ -16,16 +16,32 @@ ACTION_SIZE = 2
 
 class ABStreetIntersectionsEnv(Environment):
 
-    def __init__(self, constants, device, agent_ID, eval_agent, map_path, vis=False):
-        super(ABStreetIntersectionsEnv, self).__init__(
-            constants, device, agent_ID, eval_agent, map_path, vis
+    def __init__(
+        self,
+        constants,
+        device,
+        worker_index: int,
+        worker_name: str,
+        eval_agent,
+        scenario_path,
+        vis=False,
+    ):
+        super().__init__(
+            constants,
+            device,
+            worker_name,
+            eval_agent,
+            scenario_path,
+            vis,
         )
 
-        # Client owns all HTTP — env never calls requests directly
+        base_port = constants["parallel"]["base_port"]
+
         self.client = ABStreetClient(
             host="http://localhost",
-            port=1234 + self.agent_ID,
+            port=base_port + worker_index,
         )
+
 
         self.env_name = (
             f"{constants['environment']['shape'][0]}_"
@@ -36,6 +52,16 @@ class ABStreetIntersectionsEnv(Environment):
         self.step_interval_seconds = 30
 
         self.intersections = self._discover_intersections()
+        
+        if self.single_agent:
+            self.state_size = PER_AGENT_STATE_SIZE * len(self.intersections) + GLOBAL_STATE_SIZE
+        else:
+           interp = constants['multiagent']['state_interpolation']
+           neighbor_factor = self.max_num_neighbors if interp != 0 else 1
+           self.state_size = (PER_AGENT_STATE_SIZE + GLOBAL_STATE_SIZE) * neighbor_factor
+
+        self.action_size = ACTION_SIZE
+
         self.intersections_index = {
             intersection: i
             for i, intersection in enumerate(self.intersections)
@@ -73,11 +99,7 @@ class ABStreetIntersectionsEnv(Environment):
         return distances
 
     def _open_connection(self):
-        self.client.sim_load(
-            scenario_path=self.net_path,
-            modifiers=[],
-            edits=None,
-        )
+        self.client.sim_reset()
         self.sim_time_seconds = 0
 
     # ---- State --------------------------------------------------------------

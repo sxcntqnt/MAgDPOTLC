@@ -6,7 +6,18 @@ from run_agent_parallel import train_PPO, test_rule_based, test_PPO
 import sys
 import os
 from data_collector import DataCollector, POSSIBLE_DATA
+from environments.abstreet_client import ABStreetClient
 
+def check_abstreet():
+    try:
+        client = ABStreetClient(port=9230)
+        client.health_check()      
+        print("✓ Connected to A/B Street")
+        return True
+    except Exception as e:
+        print("✗ A/B Street unavailable")
+        print(e)
+        return False
 
 def run_grid_search(verbose, num_repeat_experiment, df_path=None, overwrite=True, data_to_collect=POSSIBLE_DATA,
                     MVP_key='waitingTime', save_model=True):
@@ -95,13 +106,10 @@ def run_experiment(exp1, exp2, constants, data_collector_obj, loaded_model=None)
 
 if __name__ == '__main__':
     # we need to import python modules from the $SUMO_HOME/tools directory
-    if 'ABSTREET_HOME' in os.environ:
-        tools = os.path.join(os.environ['ABSTREET_HOME'], 'tools')
-        sys.path.append(tools)
-    else:
-        sys.exit("please declare environment variable 'SUMO_HOME'")
+    if not check_abstreet():
+        sys.exit("A/B Street server is not running.")
 
-    device = torch.device('cpu')
+    device = None
 
     # df_path = 'run-data.xlsx'
 

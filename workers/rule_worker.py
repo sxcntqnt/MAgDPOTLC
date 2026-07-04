@@ -1,16 +1,24 @@
+# workers/rule_worker.py
 from workers.worker import Worker
 
 
 class RuleBasedWorker(Worker):
-    def __init__(self, constants, device, env, rule_set, data_collector, id):
-        super(RuleBasedWorker, self).__init__(constants, device, env, id, data_collector)
+    """
+    Rule-based baseline worker. No changes needed beyond base class import —
+    fully framework-agnostic since it never touches tensors directly.
+    """
+
+    def __init__(self, constants, device, env, rule_set, data_collector, worker_id):
+        super(RuleBasedWorker, self).__init__(
+            constants, device, env, worker_id, data_collector
+        )
         self.rule_set = rule_set
 
     def _reset(self):
         self.rule_set.reset()
 
     def _get_prediction(self, states, actions=None, ep_step=None):
-        assert actions == None  # Doesnt want actions
+        assert actions is None
         assert isinstance(states, dict)
         return {'a': self.rule_set(states)}
 
@@ -18,4 +26,4 @@ class RuleBasedWorker(Worker):
         return prediction['a']
 
     def _copy_shared_model_to_local(self):
-        pass
+        pass  # rule-based has no model to sync

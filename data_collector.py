@@ -4,7 +4,7 @@ import os.path
 from os import path
 from collections import OrderedDict
 import time
-import torch
+import numpy as np
 from copy import deepcopy
 
 
@@ -86,7 +86,7 @@ class DataCollector:
     # Whenever (only if eval) a new best is reached
     def _save_model(self, model_state):
         if self.save_model_path:
-            torch.save(model_state, self.save_model_path)
+            np.save(self.save_model_path, model_state)
 
     def _print(self, new_data, new_best, ep_count):
         if not self.verbose: return

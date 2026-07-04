@@ -22,15 +22,14 @@ def orthogonal_init(weight: Tensor, gain: float = 1.0) -> Tensor:
     u, _, v = np.linalg.svd(a, full_matrices=False)
     q = u if u.shape == flat_shape else v
     q = q.reshape(shape)
-    return Tensor(gain * q, requires_grad=True)
+    return Tensor(gain * q.astype(np.float32))
 
 
 def init_linear(layer: nn.Linear, gain: float = 1.0, bias_const: float = 0.0):
     """Applies orthogonal init to a tinygrad Linear layer in place."""
-    layer.weight = orthogonal_init(layer.weight, gain)
-    layer.bias = Tensor(
-        np.full(layer.bias.shape, bias_const, dtype=np.float32),
-        requires_grad=True
+    layer.weight.assign(orthogonal_init(layer.weight, gain))
+    layer.bias.assign(
+        Tensor(np.full(layer.bias.shape, bias_const, dtype=np.float32))
     )
 
 
@@ -189,8 +188,7 @@ class MatatuActorModel:
         # log_std as a separate learned parameter vector (not input-dependent)
         # This is simpler and more stable than a second linear head for log_std
         self.log_std = Tensor(
-            np.zeros(action_size, dtype=np.float32),
-            requires_grad=True
+            np.zeros(action_size, dtype=np.float32)
         )
         init_linear(self.fc_mean, gain=0.01)
 

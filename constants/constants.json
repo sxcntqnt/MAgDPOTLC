@@ -31,6 +31,7 @@
         "rule_set_params": {"cycle_length": 40, "NS_mult": 1.0, "EW_mult": 1.0, "phase_end_offset": 100}
     },
     "environment": {
+        "scenario_path": "/sec/root/Builder/MAgDPOTLC/data/nairobi_morning",
         "shape": [4, 4],
         "rush_hour": false,
         "uniform_generation_probability": 0.06
@@ -39,7 +40,8 @@
         "reward_interpolation": 0,
         "state_interpolation": 0
     },
-    "parallel":{
-        "num_workers": 8
+    "parallel": {
+        "num_workers": 7,
+        "base_port": 9230
     }
 }

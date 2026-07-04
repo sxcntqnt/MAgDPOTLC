@@ -1,0 +1,46 @@
+{
+  "scenario_name": "nairobi_evening_rush",
+  "people": [
+    {
+      "person_id": "commuter_002",
+      "trips": [
+        {
+          "comment": "Leaving the Westlands office to run an errand at The Junction Mall via Ring Road/Waiyaki Way. Departure at 5:15 PM (62100 seconds from midnight).",
+          "departure": 62100,
+          "origin": {
+            "Position": {
+              "longitude": 36.804245,
+              "latitude": -1.264428
+            }
+          },
+          "destination": {
+            "Position": {
+              "longitude": 36.761842,
+              "latitude": -1.300624
+            }
+          },
+          "mode": "Drive",
+          "purpose": "Shopping"
+        },
+        {
+          "comment": "Heading home from the mall toward the residential area of Ngong town via Ngong Road. Departure at 6:45 PM (67500 seconds from midnight).",
+          "departure": 67500,
+          "origin": {
+            "Position": {
+              "longitude": 36.761842,
+              "latitude": -1.300624
+            }
+          },
+          "destination": {
+            "Position": {
+              "longitude": 36.656540,
+              "latitude": -1.362141
+            }
+          },
+          "mode": "Transit",
+          "purpose": "Home"
+        }
+      ]
+    }
+  ]
+}

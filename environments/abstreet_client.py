@@ -16,7 +16,7 @@ class ABStreetClient:
     so callers get explicit failures instead of silent bad state.
     """
 
-    def __init__(self, host: str = "http://localhost", port: int = 1234, timeout: int = 30):
+    def __init__(self, host: str = "http://localhost", port: int = 9230, timeout: int = 30):
         self.base_url = f"{host}:{port}"
         self.timeout = timeout
 

@@ -1,0 +1,46 @@
+{
+  "scenario_name": "nairobi_morning_rush",
+  "people": [
+    {
+      "person_id": "commuter_001",
+      "trips": [
+        {
+          "comment": "Morning commute from Ngong/Rongai area to Upper Hill commercial zone via Matatu. Departure at 06:30 AM (23400 seconds from midnight).",
+          "departure": 23400,
+          "origin": {
+            "Position": {
+              "longitude": 36.745610,
+              "latitude": -1.396520
+            }
+          },
+          "destination": {
+            "Position": {
+              "longitude": 36.811822,
+              "latitude": -1.299532
+            }
+          },
+          "mode": "Transit",
+          "purpose": "Work"
+        },
+        {
+          "comment": "Midday trip from the Upper Hill office to a lunch/business meeting in Nairobi CBD via taxi/car. Departure at 12:45 PM (45900 seconds from midnight).",
+          "departure": 45900,
+          "origin": {
+            "Position": {
+              "longitude": 36.811822,
+              "latitude": -1.299532
+            }
+          },
+          "destination": {
+            "Position": {
+              "longitude": 36.821946,
+              "latitude": -1.283253
+            }
+          },
+          "mode": "Drive",
+          "purpose": "Meeting"
+        }
+      ]
+    }
+  ]
+}
