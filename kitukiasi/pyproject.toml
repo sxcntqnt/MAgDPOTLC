@@ -1,0 +1,21 @@
+[project]
+name = "ma3"
+version = "0.1.0"
+description = "City-agnostic generative scenario compiler for MARL traffic simulation"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "h3",
+    "tinygrad",
+    "orjson",
+    "polars",
+    "shapely",
+    "pydantic",
+]
+
+[project.scripts]
+ma3-generate = "ma3.scenarios.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["ma3*"]
